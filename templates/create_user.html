@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Face Recognition System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #e0ffff; /* aqua */
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .dashboard-container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            color: #333;
+        }
+
+        .grid-button {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        .grid-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .icon-img {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 12px;
+        }
+
+        .btn-add      { background-color: #e0f7fa; }
+        .btn-train    { background-color: #ffe0b2; }
+        .btn-checkin  { background-color: #c8e6c9; }
+        .btn-checkout { background-color: #f8bbd0; }
+        .btn-view     { background-color: #d1c4e9; }
+
+        .flash-message {
+            text-align: center;
+            font-size: 1rem;
+            color: green;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+        <img src="{{ url_for('static', filename='icons/FaceLog.png') }}" alt="FaceLog Logo" style="height: 80px;">
+        <h1 style="font-family: 'Audiowide', cursive; margin: 0;">FaceLog</h1>
+    </div>
+
+    <p class="tagline">Facial Recognition Attendance & Time Tracker</p>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="flash-message">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+
+    <div class="row g-4">
+        <!-- Left Column -->
+        <div class="col-md-6">
+            <div class="grid-button btn-add mb-4" onclick="location.href='/add_user'">
+                <img src="{{ url_for('static', filename='icons/add_user.png') }}" class="icon-img">
+                Add User
+            </div>
+
+            <div class="grid-button btn-train mb-4" onclick="location.href='/train'">
+                <img src="{{ url_for('static', filename='icons/train_model.png') }}" class="icon-img">
+                Train Model
+            </div>
+
+            <div class="grid-button btn-manage" onclick="location.href='/manage_users'">
+                <img src="{{ url_for('static', filename='icons/manage_users.png') }}" class="icon-img">
+                Manage Users
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-md-6">
+            <div class="grid-button btn-checkin mb-4" onclick="location.href='/start_attendance'">
+                <img src="{{ url_for('static', filename='icons/checkin.png') }}" class="icon-img">
+                Check-in
+            </div>
+            <div class="grid-button btn-checkout mb-4" onclick="location.href='/end_attendance'">
+                <img src="{{ url_for('static', filename='icons/checkout.png') }}" class="icon-img">
+                Check-out
+            </div>
+            <div class="grid-button btn-view" onclick="location.href='/view_attendance'">
+                <img src="{{ url_for('static', filename='icons/view_attendance.png') }}" class="icon-img">
+                View Attendance
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
