@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Attendance History</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body style="background-color: #f0f4f8; font-family: 'Segoe UI', sans-serif;">
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Attendance History</h2>
+
+    {% if error %}
+        <div class="alert alert-danger text-center">{{ error }}</div>
+    {% endif %}
+
+    {% for group in grouped_data %}
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Date: {{ group.date }}</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-bordered table-striped mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Name</th>
+                            <th>Check-in</th>
+                            <th>Check-out</th>
+                            <th>Worked Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in group.entries %}
+                        <tr>
+                            <td>{{ row['Name'] }}</td>
+                            <td>{{ row['Check-in Time'] }}</td>
+                            <td>{{ row['Check-out Time'] }}</td>
+                            <td class="text-success fw-semibold">{{ row['Worked Time'] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+</body>
+</html>
