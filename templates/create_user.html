@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <style>
         body {
             background-color: #e0ffff; /* aqua */
@@ -50,11 +51,25 @@
             margin-bottom: 12px;
         }
 
-        .btn-add      { background-color: #e0f7fa; }
-        .btn-train    { background-color: #ffe0b2; }
-        .btn-checkin  { background-color: #c8e6c9; }
-        .btn-checkout { background-color: #f8bbd0; }
-        .btn-view     { background-color: #d1c4e9; }
+        .btn-add {
+            background-color: #e0f7fa;
+        }
+
+        .btn-train {
+            background-color: #ffe0b2;
+        }
+
+        .btn-checkin {
+            background-color: #c8e6c9;
+        }
+
+        .btn-checkout {
+            background-color: #f8bbd0;
+        }
+
+        .btn-view {
+            background-color: #d1c4e9;
+        }
 
         .flash-message {
             text-align: center;
@@ -76,11 +91,11 @@
 
     {% with messages = get_flashed_messages() %}
     {% if messages %}
-        <div class="flash-message">
-            {% for message in messages %}
-                {{ message }}
-            {% endfor %}
-        </div>
+    <div class="flash-message">
+        {% for message in messages %}
+        {{ message }}
+        {% endfor %}
+    </div>
     {% endif %}
     {% endwith %}
 
@@ -118,6 +133,35 @@
                 View Attendance
             </div>
         </div>
+    </div>
+</div>
+<div class="instructions-wrapper">
+    <button class="info-button">🙋‍♂️ How to Use</button>
+    <div class="tooltip-instructions">
+        <h5>🙋‍♂️ How to Use FaceLog</h5>
+        <p>
+            FaceLog is a facial recognition-based system that helps you mark attendance and track time automatically using your face. Here's how to get started:
+        </p>
+        <p><strong>👤 1. Add a New User</strong><br>
+        Click on “Add User” from the dashboard.<br>
+        Enter your name and let the webcam capture your face from different angles.<br>
+        Once saved, your face data will be stored securely.</p>
+
+        <p><strong>🧠 2. Train the Model</strong><br>
+        After adding users, click on “Train Model.”<br>
+        The system will learn and recognize the faces you've registered.<br>
+        This step is only needed after adding or deleting users.</p>
+
+        <p><strong>🕒 3. Mark Your Attendance</strong><br>
+        ✅ <strong>Check-in</strong>: Click “Check-in” to start your work session.<br>
+        ❌ <strong>Check-out</strong>: Click “Check-out” at the end of your session.<br>
+        Your time and duration will be recorded automatically.</p>
+
+        <p><strong>📅 4. View Attendance</strong><br>
+        Click “View Attendance” to see the full log of names, dates, times, and total work hours.</p>
+
+        <p><strong>🧑‍💼 5. Manage Users</strong><br>
+        Use “Manage Users” to view or delete registered users.</p>
     </div>
 </div>
 
