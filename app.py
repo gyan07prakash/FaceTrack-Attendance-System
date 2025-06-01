@@ -87,43 +87,65 @@ def manage_users():
     if os.path.exists("names.txt"):
         with open("names.txt", "r") as f:
             for line in f:
-                key, val = line.strip().split(":")
-                users.append({'id': key, 'name': val})
+                print(f"Processing line: '{line.strip()}'")  # Debug print
+                line = line.strip()
+                if line and ':' in line:
+                    key, val = line.split(":", 1)
+                    users.append({'id': key, 'name': val})
+                else:
+                    print("⚠️ Skipping malformed line:", line)
     return render_template("manage_users.html", users=users)
+
 
 
 @app.route('/delete_user', methods=['POST'])
 def delete_user():
-    user_id = request.form['user_id']
+    user_id = int(request.form['user_id'])
     name = request.form['name']
 
-    # 1. Remove from names.txt
+    name_dict = {}
     if os.path.exists("names.txt"):
         with open("names.txt", "r") as f:
-            lines = f.readlines()
+            for line in f:
+                print(f"Reading line: '{line.strip()}'")  # Debug print
+                line = line.strip()
+                if line and ':' in line:
+                    k, v = line.split(":", 1)
+                    name_dict[int(k)] = v
+                else:
+                    print("⚠️ Malformed line:", line)
+
+    if user_id in name_dict and name_dict[user_id] == name:
+        del name_dict[user_id]
+
+        folder_path = os.path.join("dataset", name)
+        if os.path.exists(folder_path):
+            import shutil
+            shutil.rmtree(folder_path)
+
+        if os.path.exists("attendance.csv"):
+            with open("attendance.csv", "r") as f:
+                rows = [row for row in csv.reader(f) if row]
+            header = rows[0]
+            filtered = [row for row in rows[1:] if len(row) > 0 and row[0] != name]
+            with open("attendance.csv", "w", newline='') as f:
+                writer = csv.writer(f)
+                writer.writerow(header)
+                writer.writerows(filtered)
+
+        updated_dict = {}
+        for idx, (_, val) in enumerate(sorted(name_dict.items(), key=lambda x: x[1])):
+            updated_dict[idx] = val
+
         with open("names.txt", "w") as f:
-            for line in lines:
-                if not line.strip().startswith(f"{user_id}:{name}"):
-                    f.write(line)
+            for k, v in updated_dict.items():
+                f.write(f"{k}:{v}\n")
 
-    # 2. Delete user's face images
-    user_folder = os.path.join("dataset", name)
-    if os.path.exists(user_folder):
-        import shutil
-        shutil.rmtree(user_folder)
+        train_model()
 
-    # 3. Delete user's attendance from attendance.csv
-    if os.path.exists("attendance.csv"):
-        with open("attendance.csv", "r") as f:
-            rows = list(csv.reader(f))
-
-        header = rows[0]
-        filtered_rows = [row for row in rows[1:] if row[0] != name]
-
-        with open("attendance.csv", "w", newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow(header)
-            writer.writerows(filtered_rows)
+        flash(f"User '{name}' deleted and model retrained.")
+    else:
+        flash("User not found or mismatch.")
 
     return redirect(url_for('manage_users'))
 
@@ -133,5 +155,4 @@ if __name__ == '__main__':
         with open("attendance.csv", 'w', newline='') as f:
             writer = csv.writer(f)
             writer.writerow(["Name", "Check-in", "Check-out", "Duration"])
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(debug=True)
